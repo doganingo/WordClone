@@ -5,49 +5,39 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using SFB;
+using System.Collections;
+using TMPro;
 
-public class FileManager : MonoBehaviour, IPointerDownHandler
+public class FileManager : MonoBehaviour//, IPointerDownHandler
 {
     // Sample text data
-    private string _data = "Example text created by StandaloneFileBrowser";
+    public TMP_InputField dataText;
 
-#if UNITY_WEBGL && !UNITY_EDITOR
-    //
-    // WebGL
-    //
-    [DllImport("__Internal")]
-    private static extern void DownloadFile(string gameObjectName, string methodName, string filename, byte[] byteArray, int byteArraySize);
+    //public Button saveFile, saveAs, openFile;
 
-    // Broser plugin should be called in OnPointerDown.
-    public void OnPointerDown(PointerEventData eventData) {
-        var bytes = Encoding.UTF8.GetBytes(_data);
-        DownloadFile(gameObject.name, "OnFileDownload", "sample.txt", bytes, bytes.Length);
-    }
+    //public void OnPointerDown(PointerEventData eventData) { }
 
-    // Called from browser
-    public void OnFileDownload() {
-        output.text = "File Successfully Downloaded";
-    }
-#else
-    //
-    // Standalone platforms & editor
-    //
-    public void OnPointerDown(PointerEventData eventData) { }
-
-    // Listen OnClick event in standlone builds
-    void Start()
-    {
-        var button = GetComponent<Button>();
-        button.onClick.AddListener(OnClick);
-    }
-
-    public void OnClick()
+    public void OnSaveAsButtonClick()
     {
         var path = StandaloneFileBrowser.SaveFilePanel("Title", "", "sample", "txt");
         if (!string.IsNullOrEmpty(path))
         {
-            File.WriteAllText(path, _data);
+            File.WriteAllText(path, dataText.text);
         }
     }
-#endif
+
+    public void OnOpenFileClick()
+    {
+        var paths = StandaloneFileBrowser.OpenFilePanel("Title", "", "txt", false);
+        if (paths.Length > 0)
+        {
+            StartCoroutine(OutputRoutine(new System.Uri(paths[0]).AbsoluteUri));
+        }
+    }
+    private IEnumerator OutputRoutine(string url)
+    {
+        var loader = new WWW(url);
+        yield return loader;
+        dataText.text = loader.text;
+    }
 }
