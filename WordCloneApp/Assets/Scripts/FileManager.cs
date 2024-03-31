@@ -17,12 +17,32 @@ public class FileManager : MonoBehaviour//, IPointerDownHandler
 
     //public void OnPointerDown(PointerEventData eventData) { }
 
+    public void OnSaveButtonClicked()
+    {
+        if (PlayerPrefs.GetInt("isSaved") == 1)
+        {
+            string filePath = PlayerPrefs.GetString("localPath");
+
+            // Veriyi metin belgesine yaz
+            File.WriteAllText(filePath, dataText.text);
+
+            Debug.Log("File saved to desktop: " + filePath);
+        }
+        else
+        {
+            OnSaveAsButtonClick();
+        }
+        
+    }
     public void OnSaveAsButtonClick()
     {
         var path = StandaloneFileBrowser.SaveFilePanel("Title", "", "sample", "txt");
         if (!string.IsNullOrEmpty(path))
         {
             File.WriteAllText(path, dataText.text);
+            Debug.Log("path: " + path);
+            PlayerPrefs.SetString("localPath", path);
+            PlayerPrefs.SetInt("isSaved", 1);
         }
     }
 
@@ -32,6 +52,8 @@ public class FileManager : MonoBehaviour//, IPointerDownHandler
         if (paths.Length > 0)
         {
             StartCoroutine(OutputRoutine(new System.Uri(paths[0]).AbsoluteUri));
+            PlayerPrefs.SetString("localPath", "");
+            PlayerPrefs.SetInt("isSaved", 0);
         }
     }
     private IEnumerator OutputRoutine(string url)
