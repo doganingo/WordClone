@@ -3,13 +3,47 @@ using TMPro;
 
 public class TextStyleChangerDogan : MonoBehaviour
 {
-    public TMP_InputField inputField;
+    public TMP_InputField inputField, sizeInputField;
     private int selectionStartIndex;
     private int selectionEndIndex;
     public bool styleBoldChanged = false;
     public bool styleItalicChanged = false;
     public bool styleUnderLineChanged = false;
     public int fontSize;
+
+
+    public void ChangeSelectedTextToBold()
+    {
+        if (inputField != null)
+        {
+            selectionStartIndex = inputField.selectionStringAnchorPosition;
+            selectionEndIndex = inputField.selectionStringFocusPosition;
+
+            if (selectionStartIndex > selectionEndIndex)
+            {
+                int temp = selectionStartIndex;
+                selectionStartIndex = selectionEndIndex;
+                selectionEndIndex = temp;
+            }
+
+            string originalText = inputField.text;
+            string selectedText = originalText.Substring(selectionStartIndex, selectionEndIndex - selectionStartIndex);
+            string boldText = "<b>" + selectedText + "</b>";
+            string newText = originalText.Substring(0, selectionStartIndex) + boldText + originalText.Substring(selectionEndIndex);
+
+            inputField.text = newText;
+            styleBoldChanged = true;
+        }
+    }
+    public void RestoreBoldToUnBold()
+    {
+        if (styleBoldChanged)
+        {
+            inputField.text = inputField.text
+                .Replace("<b>", "").Replace("</b>", "");
+            styleBoldChanged = false;
+        }
+    }
 
     public void ChangeSelectedTextToItalic()
     {
@@ -34,28 +68,12 @@ public class TextStyleChangerDogan : MonoBehaviour
             styleItalicChanged = true;
         }
     }
-
-    public void ChangeSelectedTextToBold()
+    public void RestoreItalicToNonItalic()
     {
-        if (inputField != null)
+        if (styleItalicChanged)
         {
-            selectionStartIndex = inputField.selectionStringAnchorPosition;
-            selectionEndIndex = inputField.selectionStringFocusPosition;
-
-            if (selectionStartIndex > selectionEndIndex)
-            {
-                int temp = selectionStartIndex;
-                selectionStartIndex = selectionEndIndex;
-                selectionEndIndex = temp;
-            }
-
-            string originalText = inputField.text;
-            string selectedText = originalText.Substring(selectionStartIndex, selectionEndIndex - selectionStartIndex);
-            string boldText = "<b>" + selectedText + "</b>";
-            string newText = originalText.Substring(0, selectionStartIndex) + boldText + originalText.Substring(selectionEndIndex);
-
-            inputField.text = newText;
-            styleBoldChanged = true;
+            inputField.text = inputField.text.Replace("<i>", "").Replace("</i>", "");
+            styleItalicChanged = false;
         }
     }
 
@@ -82,24 +100,6 @@ public class TextStyleChangerDogan : MonoBehaviour
             styleUnderLineChanged = true;
         }
     }
-
-    public void RestoreBoldToUnBold()
-    {
-        if (styleBoldChanged)
-        {
-            inputField.text = inputField.text
-                .Replace("<b>", "").Replace("</b>", "");
-            styleBoldChanged = false;
-        }
-    }
-    public void RestoreItalicToNonItalic()
-    {
-        if (styleItalicChanged)
-        {
-            inputField.text = inputField.text.Replace("<i>", "").Replace("</i>", "");
-            styleItalicChanged = false;
-        }
-    }
     public void RestoreUnderlineToText()
     {
         if (styleUnderLineChanged)
@@ -107,6 +107,48 @@ public class TextStyleChangerDogan : MonoBehaviour
             inputField.text = inputField.text
                 .Replace("<u>", "").Replace("</u>", "");
             styleUnderLineChanged = false;
+        }
+    }
+
+    public void ChangeSelectedTextFontSize(int newSize)
+    {
+        if (inputField != null)
+        {
+            selectionStartIndex = inputField.selectionStringAnchorPosition;
+            selectionEndIndex = inputField.selectionStringFocusPosition;
+
+            if (selectionStartIndex > selectionEndIndex)
+            {
+                int temp = selectionStartIndex;
+                selectionStartIndex = selectionEndIndex;
+                selectionEndIndex = temp;
+            }
+
+            string originalText = inputField.text;
+            string selectedText = originalText.Substring(selectionStartIndex, selectionEndIndex - selectionStartIndex);
+            string fontSizeText = "<size=" + newSize + ">" + selectedText + "</size>";
+            string newText = originalText.Substring(0, selectionStartIndex) + fontSizeText + originalText.Substring(selectionEndIndex);
+
+            inputField.text = newText;
+            fontSize = newSize;
+        }
+    }
+    public void ChangeSelectedTextFontSizeFromInputField()
+    {
+        if (sizeInputField != null)
+        {
+            if (int.TryParse(sizeInputField.text, out int newSize))
+            {
+                ChangeSelectedTextFontSize(newSize);
+            }
+            else
+            {
+                Debug.LogError("Invalid font size input.");
+            }
+        }
+        else
+        {
+            Debug.LogError("Input field is not assigned.");
         }
     }
 }
