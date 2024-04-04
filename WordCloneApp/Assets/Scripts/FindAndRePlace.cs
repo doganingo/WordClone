@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class FindAndRePlaceDogan : MonoBehaviour
+public class FindAndRePlace : MonoBehaviour
 {
     public TMP_InputField mainInputField;
     public TMP_InputField findInputField;
@@ -14,18 +14,8 @@ public class FindAndRePlaceDogan : MonoBehaviour
 
     string findKey;
     string rePlaceKey;
-    void Start()
-    {
 
-    }
-
-
-    void Update()
-    {
-
-    }
-
-    public void FindAndRePlace()
+    public void FindAndRePlaceWord()
     {
         outputText = "";
         findKey = findInputField.text;
