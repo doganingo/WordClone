@@ -15,13 +15,14 @@ public class TextColorChanger : MonoBehaviour
     public FlexibleColorPicker fCP;
     public bool isColorButtonClicked;
     public float delay = 5.0f;
+    public GameObject applyColorButton;
     
-    public GameObject colorButton;
-    public UnityEngine.UI.Image colorButtonBackGround;
+    //public GameObject colorButton;
+    //public UnityEngine.UI.Image colorButtonBackGround;
 
     private void Start()
     {
-        colorButtonBackGround = colorButton.GetComponent<UnityEngine.UI.Image>();
+        //colorButtonBackGround = colorButton.GetComponent<UnityEngine.UI.Image>();
     }
     private void Update()
     {
@@ -36,12 +37,15 @@ public class TextColorChanger : MonoBehaviour
             selectionStartIndex = inputField.selectionStringAnchorPosition;
             selectionEndIndex = inputField.selectionStringFocusPosition;
 
+
+            Debug.Log(selectionStartIndex + " " +selectionEndIndex);
             // Baþlangýç indeksini bitiþ indeksinden küçük yap
             if (selectionStartIndex > selectionEndIndex)
             {
                 int temp = selectionStartIndex;
                 selectionStartIndex = selectionEndIndex;
                 selectionEndIndex = temp;
+                Debug.Log("test");
             }
 
             // Seçili metni deðiþtir
@@ -56,6 +60,12 @@ public class TextColorChanger : MonoBehaviour
         }
     }
 
+    public void OpenColorPicker()
+    {
+        fCP.gameObject.SetActive(true);
+        applyColorButton.gameObject.SetActive(true);
+    }
+
     public void RestoreOriginalText()
     {
         if (colorChanged)
@@ -64,6 +74,8 @@ public class TextColorChanger : MonoBehaviour
             inputField.text = inputField.text.Replace("<color=#" + ColorUtility.ToHtmlStringRGB(targetColor) + ">", "");
             inputField.text = inputField.text.Replace("</color>", "");
             colorChanged = false;
+            fCP.gameObject.SetActive(false);
+            applyColorButton.gameObject.SetActive(false);
         }
     }
 }
