@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 
 public class TextStyleChangerDogan : MonoBehaviour
 {
@@ -10,7 +11,16 @@ public class TextStyleChangerDogan : MonoBehaviour
     public bool styleItalicChanged = false;
     public bool styleUnderLineChanged = false;
     public int fontSize;
+    public GameObject textInMainInputField;
+    public TMP_Text tmpTextInMainInputField;
+    public GameObject textObject;
+    public TMP_Text text1;
 
+    private void Start()
+    {
+        textObject = GameObject.FindGameObjectWithTag("TextInMainInputField");
+        text1 = textObject.gameObject.GetComponent<TMP_Text>();
+    }
 
     public void ChangeSelectedTextToBold()
     {
@@ -151,4 +161,10 @@ public class TextStyleChangerDogan : MonoBehaviour
             Debug.LogError("Input field is not assigned.");
         }
     }
+
+     void Update()
+     {
+        int fontsize = int.Parse(sizeInputField.text);
+        text1.fontSize = fontsize;
+     }
 }
