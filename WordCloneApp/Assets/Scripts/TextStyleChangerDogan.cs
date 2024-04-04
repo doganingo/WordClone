@@ -16,10 +16,13 @@ public class TextStyleChangerDogan : MonoBehaviour
     public GameObject textObject;
     public TMP_Text text1;
 
+    public bool isFontSizeChanged;
+
     private void Start()
     {
         textObject = GameObject.FindGameObjectWithTag("TextInMainInputField");
         text1 = textObject.gameObject.GetComponent<TMP_Text>();
+        sizeInputField.onValueChanged.AddListener(OnInputFieldValueChanged);
     }
 
     public void ChangeSelectedTextToBold()
@@ -162,9 +165,14 @@ public class TextStyleChangerDogan : MonoBehaviour
         }
     }
 
-     void Update()
-     {
+    private void OnInputFieldValueChanged(string newValue)
+    {
+        Debug.Log("Yeni deðer: " + newValue);
+        isFontSizeChanged = true;
+    }
+    public void OnApplyButtonToAllPage()
+    {
         int fontsize = int.Parse(sizeInputField.text);
         text1.fontSize = fontsize;
-     }
+    }
 }

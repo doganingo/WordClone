@@ -14,7 +14,7 @@ public class WordCountDogan : MonoBehaviour
         string text = inputField.text;
         string[] words = text.Split(new char[] { ' ', '\n', '\t' }, System.StringSplitOptions.RemoveEmptyEntries);
         wordCount = words.Length;
-        Debug.Log("Word count: " + wordCount);
+        //Debug.Log("Word count: " + wordCount);
     }
     private void Update()
     {
